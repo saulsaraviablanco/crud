@@ -1,0 +1,23 @@
+#Prompt para controllertest
+
+"Por favor, crea una clase de prueba para un controlador REST en Java utilizando JUnit 5 y Mockito. La clase debe probar los métodos de un controlador llamado ClienteController, que depende de un servicio ClienteService. Los métodos que se deben probar incluyen:
+
+Obtener todos los clientes (retorna una lista de ClienteDTO con estado HTTP 200).
+Obtener un cliente por ID (retorna un ClienteDTO con estado HTTP 200).
+Agregar un cliente (retorna el cliente creado con estado HTTP 201).
+Eliminar un cliente (retorna estado HTTP 204 si la eliminación es exitosa).
+Actualizar un cliente (retorna el cliente actualizado con estado HTTP 200).
+Asegúrate de usar Mockito para simular las dependencias, verificar interacciones, y usar aserciones para validar respuestas HTTP y el contenido de las respuestas. La clase debe incluir configuraciones iniciales y pruebas independientes para cada método."
+
+
+
+#Prompt para servicetest
+
+"Por favor, crea una clase de pruebas unitarias para el servicio ClienteService en Java, utilizando JUnit 5, Mockito, y ModelMapper. Esta clase debe verificar los siguientes métodos del servicio:
+
+Obtener todos los clientes (getAllClientes): Simular el repositorio para devolver una lista de ClienteModel y verificar que el servicio devuelve la lista mapeada como ClienteDTO.
+Obtener un cliente por ID (getClienteById): Simular el repositorio para devolver un cliente por su ID y verificar que el servicio lo devuelve correctamente como ClienteDTO.
+Agregar un cliente (addCliente): Simular el guardado de un nuevo cliente en el repositorio, y verificar que el servicio devuelve el cliente creado correctamente.
+Eliminar un cliente (deleteCliente): Simular la existencia de un cliente, verificar que el servicio llama al método de eliminación del repositorio, y que devuelve true cuando se elimina correctamente.
+Actualizar un cliente (updateCliente): Simular la actualización de un cliente existente y verificar que el servicio devuelve el cliente actualizado.
+Asegúrate de configurar correctamente las anotaciones de Mockito (@Mock, @InjectMocks) y de inicializar el servicio en el método @BeforeEach. Utiliza aserciones para validar los resultados y verifica las interacciones con el repositorio."
