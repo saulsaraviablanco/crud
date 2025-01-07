@@ -9,6 +9,7 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
 @RequiredArgsConstructor
 public class ClienteModel {
     @Id

@@ -23,10 +23,6 @@ public class ClienteController {
         return ResponseEntity.ok(this.clienteService.getAllClientes());
     }
 
-    /*@GetMapping("/listarCliente/{id}")
-    public ResponseEntity<ClienteDTO> getClienteById(@PathVariable Integer id){
-        return ResponseEntity.ok(this.clienteService.getClienteById(id));
-    }*/
 
     @GetMapping("/listarCliente/{id}")
     public ResponseEntity<ClienteDTO> getClienteById(@PathVariable Integer id) {
@@ -45,16 +41,6 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(clienteCreado);
     }
 
-    /*@GetMapping("/agregarCliente")
-    public ResponseEntity<ClienteDTO> addCliente(ClienteDTO clienteDTO){
-        return ResponseEntity.ok(this.clienteService.addCliente(clienteDTO));
-    }*/
-
-    /*@GetMapping("/eliminarCliente/{id}")
-    public ResponseEntity<Boolean> deleteCliente(@PathVariable Integer id){
-        return ResponseEntity.ok(this.clienteService.deleteCliente(id));
-    }*/
-
     @DeleteMapping("/eliminarCliente/{id}")
     public ResponseEntity<Void> deleteCliente(@PathVariable Integer id) {
         boolean eliminado = this.clienteService.deleteCliente(id);
@@ -64,11 +50,6 @@ public class ClienteController {
             return ResponseEntity.notFound().build(); // 404 Not Found
         }
     }
-
-    /*@GetMapping("/actualizarCliente")
-    public ResponseEntity<ClienteDTO> updateCliente(ClienteDTO clienteDTO){
-        return ResponseEntity.ok(this.clienteService.updateCliente(clienteDTO));
-    }*/
 
     @PutMapping("/actualizarCliente")
     public ResponseEntity<ClienteDTO> updateCliente(@RequestBody ClienteDTO clienteDTO) {
