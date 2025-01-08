@@ -26,19 +26,15 @@ public class ClienteController {
 
     @GetMapping("/listarCliente/{id}")
     public ResponseEntity<ClienteDTO> getClienteById(@PathVariable Integer id) {
-        ClienteDTO cliente = this.clienteService.getClienteById(id);
-
-        if (cliente != null) {
-            return ResponseEntity.ok(cliente); // 200 OK
-        } else {
-            return ResponseEntity.notFound().build(); // 404 Not Found
-        }
+        return clienteService.getClienteById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/agregarCliente")
-    public ResponseEntity<ClienteDTO> addCliente(@RequestBody ClienteDTO clienteDTO) {
-        ClienteDTO clienteCreado = this.clienteService.addCliente(clienteDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(clienteCreado);
+    public ClienteDTO addCliente(@RequestBody ClienteDTO clienteDTO){
+        return this.clienteService.saveCliente(clienteDTO);
     }
 
     @DeleteMapping("/eliminarCliente/{id}")
@@ -51,17 +47,13 @@ public class ClienteController {
         }
     }
 
-    @PutMapping("/actualizarCliente")
-    public ResponseEntity<ClienteDTO> updateCliente(@RequestBody ClienteDTO clienteDTO) {
-        ClienteDTO clienteActualizado = this.clienteService.updateCliente(clienteDTO);
+    @PutMapping("/actualizarCliente/{id}")
+    public ResponseEntity<ClienteDTO> updateCliente(@PathVariable Integer id,@RequestBody ClienteDTO clienteDTO) {
+        clienteDTO.setId(id);
+        ClienteDTO updatedCliente = null;
+        updatedCliente = clienteService.updateCliente(clienteDTO);
+        return new ResponseEntity<>(updatedCliente, HttpStatus.OK);
 
-        if (clienteActualizado == null) {
-            return ResponseEntity.notFound().build(); // 404 Not Found si el cliente no existe
-        }
-
-        return ResponseEntity.ok(clienteActualizado); // 200 OK con el cliente actualizado
     }
-
-
 
 }

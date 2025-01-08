@@ -3,11 +3,13 @@ package com.scotiabank.copilot.crud.service;
 import com.scotiabank.copilot.crud.dto.ClienteDTO;
 import com.scotiabank.copilot.crud.model.ClienteModel;
 import com.scotiabank.copilot.crud.repository.ClienteRepository;
+import com.scotiabank.copilot.crud.exception.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,24 +30,29 @@ public class ClienteService {
                 .collect(Collectors.toList());
     }
 
-    public ClienteDTO getClienteById(Integer id) {
+    public Optional<ClienteDTO> getClienteById(Integer id) {
         ClienteModel clienteModel = clienteRepository.findById(id).orElse(null);
         if (clienteModel == null) {
-            return null;
+            return Optional.empty();
         }
-        return modelMapper.map(clienteModel, ClienteDTO.class);
+
+        ClienteDTO clienteDTO = modelMapper.map(clienteModel, ClienteDTO.class);
+        return Optional.of(clienteDTO);
     }
 
-    public ClienteDTO addCliente(ClienteDTO clienteDTO) {
-        if (clienteDTO == null) {
-            throw new IllegalArgumentException("ClienteDTO cannot be null");
+    public Optional<ClienteModel> getClienteById2(Integer id) {
+        return clienteRepository.findById(id);
+    }
+
+    public ClienteDTO saveCliente(ClienteDTO clienteDTO) {
+        List<ClienteModel> clientesConEmail = clienteRepository.findByEmail(clienteDTO.getEmail());
+        if(clientesConEmail != null && !clientesConEmail.isEmpty()){
+            throw new ConflictException("El cliente con ese email ya existe : " + clienteDTO.getEmail());
         }
         ClienteModel clienteModel = modelMapper.map(clienteDTO, ClienteModel.class);
-        if (clienteModel == null) {
-            throw new IllegalArgumentException("Mapping ClienteDTO to ClienteModel failed");
-        }
         clienteModel = clienteRepository.save(clienteModel);
-        return modelMapper.map(clienteModel, ClienteDTO.class);
+
+        return modelMapper.map(clienteModel,ClienteDTO.class);
     }
 
     public boolean deleteCliente(Integer id) {
@@ -57,19 +64,23 @@ public class ClienteService {
         }
     }
 
-
     public ClienteDTO updateCliente(ClienteDTO clienteDTO) {
-        if (clienteDTO == null) {
-            throw new IllegalArgumentException("ClienteDTO cannot be null");
+        Optional<ClienteModel> clienteExistente = getClienteById2(clienteDTO.getId());
+        if (!clienteExistente.isPresent()) {
+            throw new ResourceNotFoundException("Cliente con ID " + clienteDTO.getId() + " no encontrado.");
         }
-        if (!clienteRepository.existsById(clienteDTO.getId())) {
-            throw new IllegalArgumentException("Cliente with ID " + clienteDTO.getId() + " does not exist");
+
+        List<ClienteModel> clientesConEmail = clienteRepository.findByEmail(clienteDTO.getEmail());
+        if (clientesConEmail != null && !clientesConEmail.isEmpty()) {
+            for (ClienteModel cliente : clientesConEmail) {
+                if (!cliente.getId().equals(clienteDTO.getId())) {
+                    throw new ConflictException("El cliente con ese email ya existe: " + clienteDTO.getEmail());
+                }
+            }
         }
         ClienteModel clienteModel = modelMapper.map(clienteDTO, ClienteModel.class);
-        if (clienteModel == null) {
-            throw new IllegalArgumentException("Mapping ClienteDTO to ClienteModel failed");
-        }
         clienteModel = clienteRepository.save(clienteModel);
         return modelMapper.map(clienteModel, ClienteDTO.class);
     }
+
 }

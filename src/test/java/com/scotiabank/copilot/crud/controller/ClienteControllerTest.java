@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -43,7 +44,7 @@ class ClienteControllerTest {
     @Test
     void testGetClienteById() {
         ClienteDTO cliente = new ClienteDTO(1, "John Doe", "123 Main St", "555-1234", "john@example.com", null);
-        when(clienteService.getClienteById(1)).thenReturn(cliente);
+        when(clienteService.getClienteById(1)).thenReturn(Optional.of(cliente));
 
         ResponseEntity<ClienteDTO> response = clienteController.getClienteById(1);
 
@@ -55,12 +56,10 @@ class ClienteControllerTest {
     void testAddCliente() {
         ClienteDTO cliente = new ClienteDTO(null, "John Doe", "123 Main St", "555-1234", "john@example.com", null);
         ClienteDTO createdCliente = new ClienteDTO(1, "John Doe", "123 Main St", "555-1234", "john@example.com", null);
-        when(clienteService.addCliente(cliente)).thenReturn(createdCliente);
+        when(clienteService.saveCliente(cliente)).thenReturn(createdCliente);
 
-        ResponseEntity<ClienteDTO> response = clienteController.addCliente(cliente);
-
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(createdCliente, response.getBody());
+        ClienteDTO response = clienteController.addCliente(cliente);
+        assertEquals(createdCliente, response);
     }
 
     @Test
@@ -74,10 +73,10 @@ class ClienteControllerTest {
 
     @Test
     void testUpdateCliente() {
-        ClienteDTO cliente = new ClienteDTO(1, "John Doe", "123 Main St", "555-1234", "john@example.com", null);
+        ClienteDTO cliente = new ClienteDTO(1,"John Doe", "123 Main St", "555-1234", "john@example.com", null);
         when(clienteService.updateCliente(cliente)).thenReturn(cliente);
 
-        ResponseEntity<ClienteDTO> response = clienteController.updateCliente(cliente);
+        ResponseEntity<ClienteDTO> response = clienteController.updateCliente(1,cliente);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(cliente, response.getBody());

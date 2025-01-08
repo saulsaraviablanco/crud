@@ -12,8 +12,10 @@ import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -54,20 +56,24 @@ class ClienteServiceTest {
     @Test
     void testGetClienteById() {
         ClienteModel cliente = new ClienteModel(1, "John Doe", "123 Main St", "555-1234", "john@example.com", null);
+        ClienteDTO clienteDTO = new ClienteDTO(1, "John Doe", "123 Main St", "555-1234", "john@example.com", null);
+
         when(clienteRepository.findById(1)).thenReturn(Optional.of(cliente));
 
-        ClienteDTO result = clienteService.getClienteById(1);
+        Optional<ClienteDTO> response = clienteService.getClienteById(1);
 
-        assertEquals(cliente.getId(), result.getId());
+        assertTrue(response.isPresent(), "El cliente debe estar presente");
+        assertEquals(clienteDTO, response.get(), "El cliente obtenido debe ser el mismo que el esperado");
     }
+
 
     @Test
     void testAddCliente() {
-        ClienteDTO clienteDTO = new ClienteDTO(null, "John Doe", "123 Main St", "555-1234", "john@example.com", null);
+        ClienteDTO clienteDTO = new ClienteDTO(1, "John Doe", "123 Main St", "555-1234", "john@example.com", null);
         ClienteModel createdCliente = new ClienteModel(1, "John Doe", "123 Main St", "555-1234", "john@example.com", null);
         when(clienteRepository.save(any(ClienteModel.class))).thenReturn(createdCliente);
 
-        ClienteDTO result = clienteService.addCliente(clienteDTO);
+        ClienteDTO result = clienteService.saveCliente(clienteDTO);
 
         assertEquals(createdCliente.getId(), result.getId());
     }
@@ -87,10 +93,13 @@ class ClienteServiceTest {
     void testUpdateCliente() {
         ClienteDTO clienteDTO = new ClienteDTO(1, "John Doe", "123 Main St", "555-1234", "john@example.com", null);
         ClienteModel clienteModel = new ClienteModel(1, "John Doe", "123 Main St", "555-1234", "john@example.com", null);
+
+        when(clienteService.getClienteById(clienteDTO.getId())).thenReturn(Optional.of(clienteDTO));
+
         when(clienteRepository.existsById(1)).thenReturn(true);
         when(clienteRepository.save(any(ClienteModel.class))).thenReturn(clienteModel);
 
-        ClienteDTO result = clienteService.updateCliente(clienteDTO);
+        ClienteDTO result = clienteService.updateCliente(clienteDTO); //ACA SE CAE
 
         assertEquals(clienteModel.getId(), result.getId());
     }
