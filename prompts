@@ -1,23 +1,40 @@
 #Prompt para controllertest
 
-"Por favor, crea una clase de prueba para un controlador REST en Java utilizando JUnit 5 y Mockito. La clase debe probar los métodos de un controlador llamado ClienteController, que depende de un servicio ClienteService. Los métodos que se deben probar incluyen:
+"Por favor, genera una clase de prueba en Java utilizando JUnit y Mockito para probar un controlador llamado ClienteController. Este controlador utiliza un servicio ClienteService y expone métodos CRUD para gestionar clientes.
 
-Obtener todos los clientes (retorna una lista de ClienteDTO con estado HTTP 200).
-Obtener un cliente por ID (retorna un ClienteDTO con estado HTTP 200).
-Agregar un cliente (retorna el cliente creado con estado HTTP 201).
-Eliminar un cliente (retorna estado HTTP 204 si la eliminación es exitosa).
-Actualizar un cliente (retorna el cliente actualizado con estado HTTP 200).
-Asegúrate de usar Mockito para simular las dependencias, verificar interacciones, y usar aserciones para validar respuestas HTTP y el contenido de las respuestas. La clase debe incluir configuraciones iniciales y pruebas independientes para cada método."
+Los métodos del controlador son:
 
+getCliente(): Devuelve una lista de todos los clientes.
+getClienteById(int id): Devuelve un cliente por su ID.
+addCliente(ClienteDTO cliente): Agrega un nuevo cliente.
+deleteCliente(int id): Elimina un cliente por su ID.
+updateCliente(int id, ClienteDTO cliente): Actualiza un cliente existente.
+La clase de prueba debe:
+
+Usar anotaciones como @Mock, @InjectMocks y @BeforeEach para configurar Mockito.
+Verificar las respuestas HTTP y el comportamiento del controlador con métodos como assertEquals.
+Simular el comportamiento del servicio ClienteService usando when y verify.
+Incluye pruebas para los casos exitosos de cada método y usa MockitoAnnotations.openMocks para inicializar los mocks. Asegúrate de que la prueba sea completa y bien estructurada."
 
 
 #Prompt para servicetest
 
-"Por favor, crea una clase de pruebas unitarias para el servicio ClienteService en Java, utilizando JUnit 5, Mockito, y ModelMapper. Esta clase debe verificar los siguientes métodos del servicio:
+"Por favor, genera una clase de prueba en Java usando JUnit y Mockito para probar el servicio ClienteService. Este servicio maneja las operaciones CRUD relacionadas con la entidad Cliente.
 
-Obtener todos los clientes (getAllClientes): Simular el repositorio para devolver una lista de ClienteModel y verificar que el servicio devuelve la lista mapeada como ClienteDTO.
-Obtener un cliente por ID (getClienteById): Simular el repositorio para devolver un cliente por su ID y verificar que el servicio lo devuelve correctamente como ClienteDTO.
-Agregar un cliente (addCliente): Simular el guardado de un nuevo cliente en el repositorio, y verificar que el servicio devuelve el cliente creado correctamente.
-Eliminar un cliente (deleteCliente): Simular la existencia de un cliente, verificar que el servicio llama al método de eliminación del repositorio, y que devuelve true cuando se elimina correctamente.
-Actualizar un cliente (updateCliente): Simular la actualización de un cliente existente y verificar que el servicio devuelve el cliente actualizado.
-Asegúrate de configurar correctamente las anotaciones de Mockito (@Mock, @InjectMocks) y de inicializar el servicio en el método @BeforeEach. Utiliza aserciones para validar los resultados y verifica las interacciones con el repositorio."
+Especificaciones:
+
+El servicio depende de un repositorio ClienteRepository y usa ModelMapper para convertir entre los modelos de datos (ClienteModel) y los DTOs (ClienteDTO).
+Los métodos que deben probarse son:
+getAllClientes(): Devuelve una lista de todos los clientes.
+getClienteById(int id): Devuelve un cliente por su ID (envuelto en un Optional).
+saveCliente(ClienteDTO cliente): Agrega un nuevo cliente.
+deleteCliente(int id): Elimina un cliente por su ID.
+updateCliente(ClienteDTO cliente): Actualiza un cliente existente.
+Requisitos de la prueba:
+
+Usa anotaciones como @Mock, @InjectMocks, @BeforeEach y @ExtendWith (con SpringExtension) para configurar los mocks.
+Mockea el comportamiento del repositorio con métodos como when y verifica interacciones con verify.
+Verifica los resultados con assertEquals y assertTrue.
+Inicializa los mocks con MockitoAnnotations.openMocks y crea un objeto ClienteService en setUp() inyectando las dependencias necesarias.
+Asegúrate de manejar correctamente los casos de prueba para que cubran tanto la lógica principal como el flujo de datos.
+Incluye un ejemplo de prueba que simule datos del repositorio y valide el comportamiento del servicio con datos de ejemplo."
